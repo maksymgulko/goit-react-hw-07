@@ -1,41 +1,27 @@
 import "./App.css";
-// import { useState, useEffect } from "react";
-// import initialContacts from "./data/contacts.json";
 import ContactForm from "./components/ContactForm/ContactForm";
 import SearchBox from "./components/SearchBox/SearchBox";
 import ContactList from "./components/ContactList/ContactList";
+import { useDispatch, useSelector } from "react-redux";
+import { selectError, selectIsLoading } from "./redux/selectors";
+import { fetchContacts } from "./redux/contactsOps";
+import { useEffect } from "react";
 
 function App() {
-  // const [contact, setContact] = useState(() => {
-  //   const savedObj = window.localStorage.getItem("saved-contacts");
-  //   if (savedObj !== null) {
-  //     return JSON.parse(savedObj);
-  //   }
-  //   return initialContacts;
-  // });
-  // const [filter, setFilter] = useState("");
+  const dispatch = useDispatch();
+  const isLoading = useSelector(selectIsLoading);
+  const error = useSelector(selectError);
 
-  // useEffect(() => {
-  //   window.localStorage.setItem("saved-contacts", JSON.stringify(contact));
-  // }, [contact]);
-
-  // const addContact = (newContact) => {
-  //   setContact((prevContacts) => {
-  //     return [...prevContacts, newContact];
-  //   });
-  // };
-
-  // const deleteContact = (taskId) => {
-  //   setContact((prevContacts) => {
-  //     return prevContacts.filter((item) => item.id !== taskId);
-  //   });
-  // };
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   return (
     <div className="appForm">
       <h1>Phonebook</h1>
       <ContactForm />
       <SearchBox />
+      {isLoading && !error && <b>Request in progress...</b>}
       <ContactList />
     </div>
   );
